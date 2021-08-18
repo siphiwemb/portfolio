@@ -12,6 +12,7 @@
     <hr/>
     <form method="POST" action="{{ action }}" autocomplete="off">
         {% csrf_token %}
+        <div class="text-danger">{{ error }}</div>
         {{ user_form | crispy}}
         {{ profile_form | crispy}}
         <br/>
