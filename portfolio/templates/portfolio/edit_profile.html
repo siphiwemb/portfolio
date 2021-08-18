@@ -1,0 +1,24 @@
+{% extends 'portfolio/navbar.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block body_content %}
+<div class="container">
+    <h1>{{title}}</h1>
+    <hr/>
+    <form method="POST" action="{{ action }}" autocomplete="off">
+        {% csrf_token %}
+        {{ user_form | crispy}}
+        {{ profile_form | crispy}}
+        <br/>
+        <a href="/portfolio/profile/{{ id }}"><button type="button" class="btn">Cancel</button></a>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+
+    <br/>
+</div>
+{% endblock body_content %}

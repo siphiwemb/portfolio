@@ -1,0 +1,23 @@
+{% extends 'portfolio/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{title}}
+{% endblock title %}
+
+{% block body_content %}
+<div class="container">
+    <h1>{{title}}</h1>
+    <hr/>
+    <form method="POST" action="{{ action }}" autocomplete="off">
+        {% csrf_token %}
+        <p class="text-danger">{{ error }}</p>
+        {{ login_form | crispy}}
+        <br/>
+        <a href="#"><button type="button" class="btn">Register</button></a>
+        <button type="submit" class="btn btn-success">Login</button>
+    </form>
+
+    <br/>
+</div>
+{% endblock body_content %}

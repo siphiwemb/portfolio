@@ -1,0 +1,62 @@
+{% extends 'portfolio/navbar.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block body_content %}
+<div class="container">
+    <h1>{{ title }}</h1>
+    <hr/>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Personal</h3>
+            {% for key, value in personal.items %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>{{ key }}</strong>:
+                    </div>
+                    <div class="col-sm-6">
+                        {{ value }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-sm-12">
+            <h3>Contact</h3>
+            {% for key, value in contact.items %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>{{ key }}</strong>:
+                    </div>
+                    <div class="col-sm-6">
+                        {{ value }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-sm-12">
+            <h3>Address</h3>
+            {% for key, value in address.items %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>{{ key }}</strong>:
+                    </div>
+                    <div class="col-sm-6">
+                        {{ value }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <br/>
+    <a href="/portfolio/edit-profile/{{ id }}"><button class="btn btn-info">Edit Profile</button></a>
+    
+</div>
+<br/>
+{% endblock body_content %}

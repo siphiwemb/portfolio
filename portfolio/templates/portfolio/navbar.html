@@ -1,0 +1,17 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}{% endblock title %}
+
+
+{% block navbar %}
+<nav>
+    <div class="bg-info row nav-height">
+        <a class="home" href="/portfolio/home/{{ id }}">Home</a>
+        <a class="text-nav" href="/portfolio/profile/{{ id }}">Profile</a>
+        <a class="text-nav" href="/portfolio/">Sign Out</a>
+    </div>
+</nav>
+{% endblock navbar %}
+
+
+{% block body_content %}{% endblock body_content %}
