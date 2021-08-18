@@ -4,6 +4,7 @@ from .models import (User, Profile)
 from .forms import (ProfileForm, UserForm, LoginForm)
 from django.contrib.auth import authenticate
 from .portfolio_objects import DictObj
+from django.core.exceptions import ObjectDoesNotExist
 
 create_dict = DictObj()
 
@@ -36,18 +37,26 @@ def home(request, id):
 def display_user_profile_view(request, id):
     user_qs = User.objects.filter(id=id).values("id", "username", "email", "first_name", "last_name")
     user_items = user_qs[0]
+    personal = create_dict.get_dict(username=user_items["username"], name=user_items["first_name"], surname=user_items["last_name"])
 
-    profile_qs = Profile.objects.filter(user=user_items['id']).values("cellphone", "house_no", "street", "surburb", "city",
-     "state", "latitude", "longitude")
-    profile_items = profile_qs[0]
+    profile_obj = Profile.objects.filter(user=user_items['id'])
+    address = None
+    contact = None
 
-    personal = create_dict.get_dict(username=user_items["username"], first_name=user_items["first_name"], last_name=user_items["last_name"])
+    if profile_obj.exists():
+        profile_qs = profile_obj.values("cellphone", "house_no", "street", "surburb", "city",
+        "state", "latitude", "longitude")
+        profile_items = profile_qs[0]
 
-    address = create_dict.get_dict(house_no=profile_items["house_no"], street=profile_items["street"], surburb=profile_items["surburb"], 
-                city=profile_items["city"], state=profile_items["state"], latitude=profile_items["latitude"], longitude=profile_items["longitude"]
-            )
+        street = profile_items["house_no"] + " " + profile_items["street"]
+        address = create_dict.get_dict(street=street, surburb=profile_items["surburb"], 
+                    city=profile_items["city"], state=profile_items["state"], latitude=profile_items["latitude"], longitude=profile_items["longitude"]
+                )
 
-    contact = create_dict.get_dict(cellphone=profile_items["cellphone"], email=user_items["email"])
+        contact = create_dict.get_dict(cellphone=profile_items["cellphone"], email=user_items["email"])
+    else:
+        address = create_dict.get_dict(house_no="", street="", surburb="", city="", state="", latitude="", longitude="")
+        contact = create_dict.get_dict(cellphone="", email=user_items["email"])
 
     context = create_dict.get_dict(title="Profile", personal=personal, address=address, contact=contact, id=str(id))
 
@@ -57,9 +66,14 @@ def display_user_profile_view(request, id):
 def edit_user_profile(request, id):
 
     user_instance = User.objects.get(id=id)
-    profile_instance = Profile.objects.get(user=user_instance)
-    profile_form = ProfileForm(request.POST or None, instance=profile_instance)
     user_form = UserForm(request.POST or None, instance=user_instance)
+
+    try:
+        profile_instance = Profile.objects.get(user=user_instance)
+        profile_form = ProfileForm(request.POST or None, instance=profile_instance)
+    except ObjectDoesNotExist:
+        profile_instance = None
+        profile_form = ProfileForm(request.POST or None)
 
     context = create_dict.get_dict(title="Edit Profile", profile_form=profile_form, user_form=user_form, 
             action='/portfolio/edit-profile/'+str(id)+'/', id=str(id))
@@ -76,6 +90,12 @@ def edit_user_profile(request, id):
 
         if profile_form.is_valid():
             profile_form_instance = profile_form.save(commit=False)
+
+            if profile_instance is None:
+                profile_form_instance.user = user_instance
+            else:
+                pass
+
             profile_form_instance.cellphone = profile_form.cleaned_data.get('cellphone')
             profile_form_instance.house_no = profile_form.cleaned_data.get('house_no')
             profile_form_instance.street = profile_form.cleaned_data.get('street')
@@ -85,6 +105,9 @@ def edit_user_profile(request, id):
             profile_form_instance.latitude = profile_form.cleaned_data.get('latitude')
             profile_form_instance.longitude = profile_form.cleaned_data.get('longitude')
             profile_form_instance.save()
+        else:
+            context["error"] = profile_form.errors
+            return render(request, "portfolio/edit_profile.html", context)
 
         return redirect('/portfolio/profile/'+str(id)+'/')
 
