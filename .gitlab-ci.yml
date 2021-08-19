@@ -1,15 +1,17 @@
-before script:
-  - pip install -r requirements.txt
+image: python:latest
 
-test:
+cache:
+  paths:
+    - ~/.cache/pip/
+
+before_script:
+  - pip install django==3.1.4
+  - pip install django-crispy-forms==1.12.0
+  - pip install django-google-maps==0.12.4
+
+build-job:
+  stage: build
   script:
-    - echo "running test"
-    executor: python3/default
-    steps:
-      run:
-        command: ./manage.py test
-        name: testing
+    - echo "Building & Testing App"
+    - python3 ./manage.py test
 
-      store_artifacts:
-        path: test_results/
-        destination: portfolio
