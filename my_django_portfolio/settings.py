@@ -39,8 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'portfolio',
-    'crispy_forms',
-    'django_google_maps'
+    'crispy_forms'
 ]
 
 MIDDLEWARE = [
@@ -128,5 +127,3 @@ STATICFILES_DIRS = (
 )
 
 STATIC_URL = '/static/'
-
-GOOGLE_MAPS_API_KEY = 'AIzaSyBw6O961aoL_vPxYrn_MBLHr9376kDlWEE'
