@@ -36,6 +36,10 @@ def home(request, id):
 
 def display_user_profile_view(request, id):
     user_qs = User.objects.filter(id=id).values("id", "username", "email", "first_name", "last_name")
+    
+    if len(user_qs) < 1:
+        return redirect('/portfolio/')
+
     user_items = user_qs[0]
     personal = create_dict.get_dict(username=user_items["username"], name=user_items["first_name"], surname=user_items["last_name"])
 
@@ -65,8 +69,11 @@ def display_user_profile_view(request, id):
 
 def edit_user_profile(request, id):
 
-    user_instance = User.objects.get(id=id)
-    user_form = UserForm(request.POST or None, instance=user_instance)
+    try:
+        user_instance = User.objects.get(id=id)
+        user_form = UserForm(request.POST or None, instance=user_instance)
+    except ObjectDoesNotExist:
+        return redirect('/portfolio/')
 
     try:
         profile_instance = Profile.objects.get(user=user_instance)
