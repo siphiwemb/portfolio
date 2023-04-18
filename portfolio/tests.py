@@ -1,8 +1,7 @@
 from django.test import TestCase
 from .models import (Profile, User)
-from . import views
 
-# Create your tests here.
+
 class UserTestCase(TestCase):
     def setUp(self):
         user1 = User.objects.create(username="user1", first_name="usertest1", last_name="last1",
