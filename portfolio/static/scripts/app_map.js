@@ -8,8 +8,6 @@ function initMap() {
 
   users = JSON.parse(xhttp.responseText);
 
-  console.log(users);
-
   const mapOptions = {
     zoom: 4,
     center: { lat: parseFloat(users[0].latitude), lng: parseFloat(users[0].longitude) },

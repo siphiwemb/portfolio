@@ -7,17 +7,20 @@
 
 {% block body_content %}
 <div class="container">
-    <h1>{{title}}</h1>
-    <hr/>
-    <form method="POST" action="{{ action }}" autocomplete="off">
-        {% csrf_token %}
-        <p class="text-danger">{{ error }}</p>
-        {{ login_form | crispy}}
-        <br/>
-        <a href="#"><button type="button" class="btn">Register</button></a>
-        <button type="submit" class="btn btn-success">Login</button>
-    </form>
-
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <div style="height:150px"></div>
+        <h1>{{title}}</h1>
+        <hr/>
+        <form method="POST" action="{{ action }}" autocomplete="off">
+            {% csrf_token %}
+            <p class="text-danger">{{ error }}</p>
+            {{ login_form | crispy}}
+            <br/>
+            <button type="submit" class="btn btn-success">Login</button>
+        </form>
+    </div>
+    <div class="col-sm-4"></div>
     <br/>
 </div>
 {% endblock body_content %}
